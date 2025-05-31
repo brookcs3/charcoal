@@ -14,7 +14,7 @@ class QAController
 
     public function index()
     {
-        $allQAs = $this->qaService->getAllQAs();
+        $allQAs = $this->qaService->getAllQAItems();
         $categories = $this->qaService->getCategories();
         
         return [
@@ -31,7 +31,7 @@ class QAController
             exit;
         }
 
-        $filteredQAs = $this->qaService->getQAsByCategory($category);
+        $filteredQAs = $this->qaService->getQAItemsByCategory($category);
         $categories = $this->qaService->getCategories();
         
         return [
@@ -48,7 +48,7 @@ class QAController
         $results = [];
         
         if (!empty($query)) {
-            $results = $this->qaService->searchQAs($query);
+            $results = $this->qaService->searchQAItems($query);
         }
         
         return [
@@ -66,15 +66,15 @@ class QAController
         $search = $_GET['search'] ?? null;
         
         if ($search) {
-            $data = $this->qaService->searchQAs($search);
+            $data = $this->qaService->searchQAItems($search);
         } elseif ($category) {
-            $data = $this->qaService->getQAsByCategory($category);
+            $data = $this->qaService->getQAItemsByCategory($category);
         } else {
-            $data = $this->qaService->getAllQAs();
+            $data = $this->qaService->getAllQAItems();
         }
         
         echo json_encode([
-            'data' => array_map(fn($qa) => $qa->toArray(), $data),
+            'data' => array_map(function($qa) { return $qa->toArray(); }, $data),
             'count' => count($data)
         ]);
         exit;
