@@ -1,0 +1,337 @@
+{% extends "layout.twig" %}
+
+{% block title %}{{ title }} - {{ subtitle }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-header">
+            <h1 class="hero-title">{{ title }}</h1>
+            <p class="hero-subtitle">{{ subtitle }}</p>
+        </div>
+        
+        <div class="hero-stats">
+            {% for stat in heroStats %}
+            <div class="stat-card stat-{{ stat.status }}">
+                <div class="stat-icon">{{ stat.icon }}</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stat.value }}</div>
+                    <div class="stat-label">{{ stat.label }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Quick Links -->
+<section class="quick-links">
+    <h2 class="section-title">Project Sections</h2>
+    <div class="links-grid">
+        {% for link in quickLinks %}
+        <a href="{{ link.url }}" class="link-card">
+            <div class="link-icon">{{ link.icon }}</div>
+            <div class="link-content">
+                <h3 class="link-title">{{ link.title }}</h3>
+                <p class="link-description">{{ link.description }}</p>
+            </div>
+            <div class="link-arrow">→</div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Compliance Overview -->
+<section class="compliance-overview">
+    <div class="card">
+        <h2 class="section-title">Compliance Overview</h2>
+        <div class="compliance-grid">
+            <div class="compliance-item">
+                <div class="compliance-score">{{ complianceReport.complianceScore }}%</div>
+                <div class="compliance-label">Overall Score</div>
+                <div class="compliance-status {{ complianceReport.status|lower }}">{{ complianceReport.status }}</div>
+            </div>
+            <div class="compliance-details">
+                <h3>Key Metrics</h3>
+                <ul class="metrics-list">
+                    <li>
+                        <span class="metric-label">Tests Passed:</span>
+                        <span class="metric-value">{{ complianceReport.metrics.tests_passed }}/{{ complianceReport.metrics.tests_total }}</span>
+                    </li>
+                    <li>
+                        <span class="metric-label">Code Coverage:</span>
+                        <span class="metric-value">{{ complianceReport.metrics.code_coverage }}%</span>
+                    </li>
+                    <li>
+                        <span class="metric-label">Style Compliance:</span>
+                        <span class="metric-value">{{ complianceReport.metrics.style_compliance }}%</span>
+                    </li>
+                    <li>
+                        <span class="metric-label">Documentation:</span>
+                        <span class="metric-value">{{ complianceReport.metrics.documentation_score }}%</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="compliance-footer">
+            <p class="last-updated">Last updated: {{ complianceReport.lastUpdated }}</p>
+            <a href="/compliance" class="btn">View Detailed Analysis</a>
+        </div>
+    </div>
+</section>
+
+<style>
+.hero {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--text-light), var(--accent-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    color: var(--text-medium);
+    margin-bottom: 3rem;
+}
+
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-card.stat-success {
+    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.stat-card.stat-warning {
+    border-color: rgba(245, 158, 11, 0.3);
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.stat-icon {
+    font-size: 2rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-light);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.link-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.link-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.link-icon {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.link-content {
+    flex: 1;
+}
+
+.link-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.link-description {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.link-arrow {
+    font-size: 1.5rem;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.link-card:hover .link-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+.compliance-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.compliance-item {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.compliance-score {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.compliance-label {
+    font-size: 1.1rem;
+    color: var(--text-medium);
+    margin: 0.5rem 0;
+}
+
+.compliance-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.compliance-status.compliant {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.metrics-list {
+    list-style: none;
+    space-y: 1rem;
+}
+
+.metrics-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-label {
+    color: var(--text-medium);
+}
+
+.metric-value {
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.compliance-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.last-updated {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 2rem 1rem;
+    }
+    
+    .hero-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .compliance-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .compliance-footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}

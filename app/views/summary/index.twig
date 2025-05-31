@@ -1,0 +1,442 @@
+{% extends "layout.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="summary-section">
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="page-title">Project Summary</h1>
+            <p class="page-subtitle">Comprehensive Analysis Dashboard for CS362</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Overview Stats -->
+        <div class="overview-cards">
+            <div class="overview-card">
+                <div class="card-icon">📁</div>
+                <div class="card-content">
+                    <h3>Total Files</h3>
+                    <div class="card-value">{{ summary.overview.totalFiles }}</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-icon">💻</div>
+                <div class="card-content">
+                    <h3>Lines of Code</h3>
+                    <div class="card-value">{{ summary.overview.linesOfCode|number_format }}</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-icon">🧪</div>
+                <div class="card-content">
+                    <h3>Test Coverage</h3>
+                    <div class="card-value">{{ summary.overview.testCoverage }}%</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="card-icon">⚙️</div>
+                <div class="card-content">
+                    <h3>Maintainability</h3>
+                    <div class="card-value">{{ summary.overview.maintainability }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Table -->
+        <div class="metrics-section">
+            <h2>Detailed Metrics</h2>
+            <div class="table-container">
+                <table class="metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current</th>
+                            <th>Target</th>
+                            <th>Status</th>
+                            <th>Trend</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for metric in summary.metrics %}
+                            <tr class="metric-row">
+                                <td class="metric-category">{{ metric.category }}</td>
+                                <td class="metric-current">
+                                    <span class="metric-value">{{ metric.current }}{% if metric.category != 'Performance' and metric.category != 'Security' %}%{% endif %}</span>
+                                </td>
+                                <td class="metric-target">{{ metric.target }}{% if metric.category != 'Performance' and metric.category != 'Security' %}%{% endif %}</td>
+                                <td class="metric-status">
+                                    <span class="status-badge status-{{ metric.status|lower|replace(' ', '-') }}">
+                                        {{ metric.status }}
+                                    </span>
+                                </td>
+                                <td class="metric-trend">
+                                    <span class="trend-indicator trend-{{ metric.trend }}">
+                                        {% if metric.trend == 'up' %}↗️{% elseif metric.trend == 'down' %}↘️{% else %}→{% endif %}
+                                    </span>
+                                </td>
+                                <td class="metric-details">
+                                    <div class="details-tooltip">
+                                        {{ metric.details }}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Breakdown Charts -->
+        <div class="breakdown-section">
+            <div class="breakdown-grid">
+                <div class="breakdown-card">
+                    <h3>Files by Type</h3>
+                    <div class="breakdown-chart">
+                        {% for type, count in summary.breakdown['Files by Type'] %}
+                            <div class="breakdown-item">
+                                <div class="breakdown-bar">
+                                    <div class="breakdown-fill" style="width: {{ (count / 15 * 100) }}%"></div>
+                                </div>
+                                <div class="breakdown-label">
+                                    <span class="breakdown-type">{{ type }}</span>
+                                    <span class="breakdown-count">{{ count }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="breakdown-card">
+                    <h3>Issues by Severity</h3>
+                    <div class="breakdown-chart">
+                        {% for severity, count in summary.breakdown['Issues by Severity'] %}
+                            <div class="breakdown-item">
+                                <div class="breakdown-bar">
+                                    <div class="breakdown-fill severity-{{ severity|lower }}" style="width: {{ (count / 23 * 100) }}%"></div>
+                                </div>
+                                <div class="breakdown-label">
+                                    <span class="breakdown-type">{{ severity }}</span>
+                                    <span class="breakdown-count">{{ count }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="actions-section">
+            <h2>Quick Actions</h2>
+            <div class="action-grid">
+                <a href="/summary/detailed" class="action-card">
+                    <div class="action-icon">📊</div>
+                    <h4>Detailed Analysis</h4>
+                    <p>View comprehensive breakdown by modules</p>
+                </a>
+                
+                <a href="/compliance/overview" class="action-card">
+                    <div class="action-icon">✅</div>
+                    <h4>Compliance Report</h4>
+                    <p>Check compliance status and requirements</p>
+                </a>
+                
+                <a href="/qa" class="action-card">
+                    <div class="action-icon">❓</div>
+                    <h4>Q&A Section</h4>
+                    <p>Browse frequently asked questions</p>
+                </a>
+                
+                <a href="/discussion" class="action-card">
+                    <div class="action-icon">💬</div>
+                    <h4>Discussions</h4>
+                    <p>Join technical discussions and forums</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.summary-section {
+    min-height: 100vh;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.overview-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.overview-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.overview-card:hover {
+    transform: translateY(-2px);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+}
+
+.card-content h3 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+.metrics-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
+}
+
+.metrics-section h2 {
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.metrics-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.metrics-table th,
+.metrics-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.metrics-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+}
+
+.metric-value {
+    font-weight: 600;
+    color: #059669;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-above-target {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-near-target {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-below-target {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.trend-indicator {
+    font-size: 1.2rem;
+}
+
+.details-tooltip {
+    font-size: 0.875rem;
+    color: #6b7280;
+    max-width: 200px;
+}
+
+.breakdown-section {
+    margin-bottom: 3rem;
+}
+
+.breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+.breakdown-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.breakdown-card h3 {
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.breakdown-item {
+    margin-bottom: 1rem;
+}
+
+.breakdown-bar {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.breakdown-fill {
+    height: 100%;
+    background: #059669;
+    transition: width 0.3s ease;
+}
+
+.breakdown-fill.severity-critical {
+    background: #dc2626;
+}
+
+.breakdown-fill.severity-high {
+    background: #ea580c;
+}
+
+.breakdown-fill.severity-medium {
+    background: #d97706;
+}
+
+.breakdown-fill.severity-low {
+    background: #65a30d;
+}
+
+.breakdown-fill.severity-info {
+    background: #2563eb;
+}
+
+.breakdown-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+}
+
+.breakdown-type {
+    color: #374151;
+}
+
+.breakdown-count {
+    font-weight: 600;
+    color: #059669;
+}
+
+.actions-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.actions-section h2 {
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.action-card {
+    display: block;
+    padding: 1.5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.action-card:hover {
+    border-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.action-card h4 {
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+
+.action-card p {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .breakdown-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .metrics-table {
+        font-size: 0.875rem;
+    }
+}
+</style>
+{% endblock %}

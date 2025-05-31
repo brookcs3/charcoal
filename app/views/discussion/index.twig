@@ -1,0 +1,607 @@
+{% extends "layout.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="discussion-section">
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="page-title">EdDiscussion</h1>
+            <p class="page-subtitle">Technical Discussions & Community Forums</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="discussion-controls">
+            <div class="controls-header">
+                <h2>Active Discussions</h2>
+                <button class="btn btn-primary">Start New Discussion</button>
+            </div>
+            
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label>Category:</label>
+                    <select class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="best-practices">Best Practices</option>
+                        <option value="performance">Performance</option>
+                        <option value="security">Security</option>
+                        <option value="testing">Testing</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Status:</label>
+                    <select class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                
+                <div class="search-group">
+                    <input type="text" placeholder="Search discussions..." class="search-input">
+                    <button class="search-btn">🔍</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="discussions-list">
+            {% for discussion in discussions %}
+                <div class="discussion-item" data-category="{{ discussion.category|lower|replace(' ', '-') }}" data-status="{{ discussion.status }}">
+                    <div class="discussion-header">
+                        <div class="discussion-meta">
+                            <span class="category-badge category-{{ discussion.category|lower|replace(' ', '-') }}">
+                                {{ discussion.category }}
+                            </span>
+                            <span class="status-badge status-{{ discussion.status }}">
+                                {{ discussion.status|title }}
+                            </span>
+                        </div>
+                        <div class="discussion-stats">
+                            <span class="stat">👁️ {{ discussion.views }}</span>
+                            <span class="stat">💬 {{ discussion.replies }}</span>
+                        </div>
+                    </div>
+
+                    <div class="discussion-content">
+                        <h3 class="discussion-title">
+                            <a href="/discussion/topic/{{ discussion.id }}">{{ discussion.title }}</a>
+                        </h3>
+                        <p class="discussion-excerpt">{{ discussion.excerpt }}</p>
+                        
+                        <div class="discussion-tags">
+                            {% for tag in discussion.tags %}
+                                <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="discussion-footer">
+                        <div class="author-info">
+                            <span class="author">By {{ discussion.author }}</span>
+                            <span class="date">{{ discussion.date }}</span>
+                        </div>
+                        
+                        <div class="discussion-actions">
+                            <button class="action-btn expand-btn" data-target="responses-{{ discussion.id }}">
+                                <span class="btn-text">View Responses</span>
+                                <span class="btn-icon">▼</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="discussion-responses" id="responses-{{ discussion.id }}" style="display: none;">
+                        <h4>Recent Responses ({{ discussion.responses|length }})</h4>
+                        {% for response in discussion.responses %}
+                            <div class="response-item">
+                                <div class="response-header">
+                                    <span class="response-author">{{ response.author }}</span>
+                                    <span class="response-date">{{ response.date }}</span>
+                                    <span class="response-votes">👍 {{ response.votes }}</span>
+                                </div>
+                                <div class="response-content">
+                                    {{ response.content }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="response-actions">
+                            <button class="btn btn-outline">Add Response</button>
+                            <a href="/discussion/topic/{{ discussion.id }}" class="btn btn-link">View Full Discussion</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="discussion-summary">
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-icon">💬</div>
+                    <div class="summary-content">
+                        <h3>Total Discussions</h3>
+                        <div class="summary-value">{{ discussions|length }}</div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="summary-icon">✅</div>
+                    <div class="summary-content">
+                        <h3>Resolved</h3>
+                        <div class="summary-value">
+                            {% set resolved = 0 %}
+                            {% for discussion in discussions %}
+                                {% if discussion.status == 'resolved' %}
+                                    {% set resolved = resolved + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ resolved }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="summary-icon">🔥</div>
+                    <div class="summary-content">
+                        <h3>Active</h3>
+                        <div class="summary-value">
+                            {% set active = 0 %}
+                            {% for discussion in discussions %}
+                                {% if discussion.status == 'active' %}
+                                    {% set active = active + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ active }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="summary-icon">👥</div>
+                    <div class="summary-content">
+                        <h3>Contributors</h3>
+                        <div class="summary-value">15</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.discussion-section {
+    min-height: 100vh;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #7c2d12 0%, #dc2626 100%);
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.discussion-controls {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.controls-header h2 {
+    margin: 0;
+    color: #1f2937;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-outline {
+    border: 2px solid #dc2626;
+    color: #dc2626;
+    background: transparent;
+}
+
+.btn-link {
+    color: #dc2626;
+    background: transparent;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filter-group,
+.search-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.filter-select,
+.search-input {
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.875rem;
+}
+
+.filter-select:focus,
+.search-input:focus {
+    outline: none;
+    border-color: #dc2626;
+}
+
+.search-group {
+    flex-direction: row;
+    align-items: center;
+}
+
+.search-btn {
+    padding: 0.5rem;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.discussions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.discussion-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.discussion-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.discussion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.discussion-meta {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.category-badge,
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.category-best-practices {
+    background: #ddd6fe;
+    color: #5b21b6;
+}
+
+.category-performance {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.category-security {
+    background: #bee3f8;
+    color: #2b6cb0;
+}
+
+.category-testing {
+    background: #c6f6d5;
+    color: #2f855a;
+}
+
+.status-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-resolved {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.discussion-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.discussion-title a {
+    color: #1f2937;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.discussion-title a:hover {
+    color: #dc2626;
+}
+
+.discussion-excerpt {
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0.5rem 0 1rem 0;
+}
+
+.discussion-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.tag {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.discussion-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.author-info {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.action-btn {
+    background: transparent;
+    border: none;
+    color: #dc2626;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    color: #991b1b;
+}
+
+.discussion-responses {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.discussion-responses h4 {
+    margin-bottom: 1rem;
+    color: #374151;
+}
+
+.response-item {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.response-header {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.response-author {
+    font-weight: 500;
+    color: #374151;
+}
+
+.response-date {
+    color: #6b7280;
+}
+
+.response-votes {
+    color: #dc2626;
+    margin-left: auto;
+}
+
+.response-content {
+    color: #4b5563;
+    line-height: 1.5;
+}
+
+.response-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.summary-icon {
+    font-size: 2rem;
+}
+
+.summary-content h3 {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #dc2626;
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .controls-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .discussion-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .discussion-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Expand/collapse responses
+    const expandBtns = document.querySelectorAll('.expand-btn');
+    expandBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const targetId = this.dataset.target;
+            const responses = document.getElementById(targetId);
+            const icon = this.querySelector('.btn-icon');
+            
+            if (responses.style.display === 'none') {
+                responses.style.display = 'block';
+                icon.textContent = '▲';
+                this.querySelector('.btn-text').textContent = 'Hide Responses';
+            } else {
+                responses.style.display = 'none';
+                icon.textContent = '▼';
+                this.querySelector('.btn-text').textContent = 'View Responses';
+            }
+        });
+    });
+
+    // Filter functionality
+    const categoryFilter = document.querySelector('.filter-select[value=""]');
+    const statusFilter = document.querySelectorAll('.filter-select')[1];
+    const searchInput = document.querySelector('.search-input');
+    
+    function filterDiscussions() {
+        const discussions = document.querySelectorAll('.discussion-item');
+        const categoryValue = categoryFilter ? categoryFilter.value : '';
+        const statusValue = statusFilter ? statusFilter.value : '';
+        const searchValue = searchInput ? searchInput.value.toLowerCase() : '';
+        
+        discussions.forEach(discussion => {
+            const category = discussion.dataset.category;
+            const status = discussion.dataset.status;
+            const title = discussion.querySelector('.discussion-title').textContent.toLowerCase();
+            const excerpt = discussion.querySelector('.discussion-excerpt').textContent.toLowerCase();
+            
+            const matchesCategory = !categoryValue || category === categoryValue;
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesSearch = !searchValue || title.includes(searchValue) || excerpt.includes(searchValue);
+            
+            if (matchesCategory && matchesStatus && matchesSearch) {
+                discussion.style.display = 'block';
+            } else {
+                discussion.style.display = 'none';
+            }
+        });
+    }
+    
+    if (categoryFilter) categoryFilter.addEventListener('change', filterDiscussions);
+    if (statusFilter) statusFilter.addEventListener('change', filterDiscussions);
+    if (searchInput) searchInput.addEventListener('input', filterDiscussions);
+});
+</script>
+{% endblock %}

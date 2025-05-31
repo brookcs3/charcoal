@@ -1,0 +1,385 @@
+{% extends "layout.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="qa-section">
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="page-title">Q&A Section</h1>
+            <p class="page-subtitle">Frequently Asked Questions & Technical Discussions</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="qa-controls">
+            <div class="search-box">
+                <input type="text" id="qa-search" placeholder="Search questions and answers..." />
+                <button type="button" class="search-btn">🔍</button>
+            </div>
+            
+            <div class="category-filters">
+                <button class="filter-btn active" data-category="all">All Questions</button>
+                {% for category in categories %}
+                    <button class="filter-btn" data-category="{{ category }}">{{ category|title }}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="qa-grid" id="qa-container">
+            {% for qa in qas %}
+                <div class="qa-item" data-category="{{ qa.category }}" data-id="{{ loop.index }}">
+                    <div class="qa-header">
+                        <div class="qa-category">{{ qa.category|title }}</div>
+                        <div class="qa-expand">+</div>
+                    </div>
+                    
+                    <h3 class="qa-question">{{ qa.question }}</h3>
+                    
+                    <div class="qa-content">
+                        <div class="qa-answer">
+                            {{ qa.answer|nl2br }}
+                        </div>
+                        
+                        {% if qa.codeSnippet %}
+                            <div class="code-example">
+                                <h4>Code Example:</h4>
+                                <pre><code>{{ qa.codeSnippet }}</code></pre>
+                            </div>
+                        {% endif %}
+                        
+                        {% if qa.tags %}
+                            <div class="qa-tags">
+                                {% for tag in qa.tags %}
+                                    <span class="tag">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="qa-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ qas|length }}</span>
+                <span class="stat-label">Total Questions</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ categories|length }}</span>
+                <span class="stat-label">Categories</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">95%</span>
+                <span class="stat-label">Answer Rate</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.qa-section {
+    min-height: 100vh;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.qa-controls {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-box {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#qa-search {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+#qa-search:focus {
+    outline: none;
+    border-color: #4f46e5;
+}
+
+.search-btn {
+    padding: 0.75rem 1rem;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-btn:hover {
+    background: #3730a3;
+}
+
+.category-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    background: #f3f4f6;
+    color: #374151;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #4f46e5;
+    color: white;
+}
+
+.qa-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.qa-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.qa-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.qa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.qa-category {
+    background: #4f46e5;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.qa-expand {
+    width: 24px;
+    height: 24px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #4f46e5;
+    transition: all 0.2s ease;
+}
+
+.qa-question {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.qa-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.qa-item.expanded .qa-content {
+    max-height: 1000px;
+}
+
+.qa-item.expanded .qa-expand {
+    transform: rotate(45deg);
+    background: #4f46e5;
+    color: white;
+}
+
+.qa-answer {
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.code-example {
+    margin: 1rem 0;
+}
+
+.code-example h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.code-example pre {
+    background: #1f2937;
+    color: #f9fafb;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.qa-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.tag {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.qa-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.qa-item.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .category-filters {
+        justify-content: center;
+    }
+    
+    .qa-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // QA item expansion
+    const qaItems = document.querySelectorAll('.qa-item');
+    qaItems.forEach(item => {
+        item.addEventListener('click', function() {
+            this.classList.toggle('expanded');
+        });
+    });
+
+    // Category filtering
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active state
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.dataset.category;
+            
+            // Filter QA items
+            qaItems.forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('qa-search');
+    const searchBtn = document.querySelector('.search-btn');
+    
+    function performSearch() {
+        const query = searchInput.value.toLowerCase();
+        
+        qaItems.forEach(item => {
+            const question = item.querySelector('.qa-question').textContent.toLowerCase();
+            const answer = item.querySelector('.qa-answer').textContent.toLowerCase();
+            
+            if (question.includes(query) || answer.includes(query)) {
+                item.classList.remove('hidden');
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+    }
+    
+    searchInput.addEventListener('input', performSearch);
+    searchBtn.addEventListener('click', performSearch);
+});
+</script>
+{% endblock %}
