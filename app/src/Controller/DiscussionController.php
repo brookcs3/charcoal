@@ -4,6 +4,18 @@ namespace App\Controller;
 
 class DiscussionController
 {
+    /**
+     * Redirects to a given URL.
+     *
+     * @param string $url
+     * @return void
+     */
+    protected function redirect($url)
+    {
+        header('Location: ' . $url);
+        exit;
+    }
+
     public function index()
     {
         $discussions = $this->getDiscussionData();
@@ -37,7 +49,7 @@ class DiscussionController
         return [
             'topic' => $topic,
             'title' => $topic['title'] . ' - EdDiscussion'
-        ]);
+        ];
     }
 
     private function getDiscussionData()

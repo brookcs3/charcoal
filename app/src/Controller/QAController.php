@@ -27,7 +27,8 @@ class QAController
     public function category($category = null)
     {
         if (!$category) {
-            return $this->redirect('/qa');
+            header('Location: /qa');
+            exit;
         }
 
         $filteredQAs = $this->qaService->getQAsByCategory($category);
@@ -38,7 +39,7 @@ class QAController
             'categories' => $categories,
             'currentCategory' => $category,
             'title' => ucfirst($category) . ' Q&A - CS362 Analysis'
-        ]);
+        ];
     }
 
     public function search()
@@ -54,7 +55,7 @@ class QAController
             'query' => $query,
             'results' => $results,
             'title' => 'Search Results - Q&A'
-        ]);
+        ];
     }
 
     public function api()
@@ -73,12 +74,11 @@ class QAController
         }
         
         echo json_encode([
-            'success' => true,
-            'data' => array_map(function($qa) {
-                return $qa->toArray();
-            }, $data),
+            'data' => array_map(fn($qa) => $qa->toArray(), $data),
             'count' => count($data)
         ]);
         exit;
     }
 }
+
+

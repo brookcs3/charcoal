@@ -8,12 +8,9 @@ class ComplianceController
     public function overview()
     {
         $complianceData = new ComplianceReport();
-        $complianceData->setOverallScore(87.3)
-                      ->setTotalChecks(156)
-                      ->setPassedChecks(136)
-                      ->setFailedChecks(20)
-                      ->setCriticalIssues(3)
-                      ->setWarnings(17)
+        $complianceData->setComplianceScore(87.3)
+                      ->setTitle('CS362 Compliance Overview')
+                      ->setStatus('Needs Improvement')
                       ->setLastUpdated('2024-01-15');
 
         return [
@@ -25,12 +22,9 @@ class ComplianceController
     public function detailed()
     {
         $complianceData = new ComplianceReport();
-        $complianceData->setOverallScore(87.3)
-                      ->setTotalChecks(156)
-                      ->setPassedChecks(136)
-                      ->setFailedChecks(20)
-                      ->setCriticalIssues(3)
-                      ->setWarnings(17)
+        $complianceData->setComplianceScore(87.3)
+                      ->setTitle('Detailed Compliance Analysis')
+                      ->setStatus('Needs Improvement')
                       ->setLastUpdated('2024-01-15');
 
         $detailedMetrics = [
@@ -59,6 +53,8 @@ class ComplianceController
                 'details' => 'Comprehensive documentation with minor gaps'
             ]
         ];
+        
+        $complianceData->setMetrics($detailedMetrics);
 
         return [
             'compliance' => $complianceData,
@@ -70,12 +66,9 @@ class ComplianceController
     public function report()
     {
         $complianceData = new ComplianceReport();
-        $complianceData->setOverallScore(87.3)
-                      ->setTotalChecks(156)
-                      ->setPassedChecks(136)
-                      ->setFailedChecks(20)
-                      ->setCriticalIssues(3)
-                      ->setWarnings(17)
+        $complianceData->setComplianceScore(87.3)
+                      ->setTitle('Full Compliance Report')
+                      ->setStatus('Needs Improvement')
                       ->setLastUpdated('2024-01-15');
 
         $reportSections = [
