@@ -1,0 +1,31 @@
+{
+    "debug": true,
+    "logger": {
+        "level": "debug"
+    },
+    "cache": {
+        "active": true,
+        "types": [ "apc", "memcache" ],
+        "prefix": "acme"
+    },
+    "apis": {
+        "google": {
+            "analytics": {
+                "tracking_id": ""
+            }
+        }
+    },
+    "databases": {
+        "mysql": {
+            "type": "mysql",
+            "database": "charcoal",
+            "username": "root",
+            "password": ""
+        },
+        "sqlite": {
+            "type": "sqlite",
+            "database": ":memory:"
+        }
+    },
+    "default_database": "mysql"
+}

@@ -3,15 +3,12 @@
 namespace App\Controller;
 
 use App\Service\QADataService;
-use Charcoal\App\Controller\AbstractController;
-
-class QAController extends AbstractController
+class QAController
 {
     private $qaService;
 
     public function __construct()
     {
-        parent::__construct();
         $this->qaService = new QADataService();
     }
 
@@ -20,11 +17,11 @@ class QAController extends AbstractController
         $allQAs = $this->qaService->getAllQAs();
         $categories = $this->qaService->getCategories();
         
-        return $this->render('qa/index.twig', [
+        return [
             'qas' => $allQAs,
             'categories' => $categories,
             'title' => 'Q&A Section - CS362 Analysis'
-        ]);
+        ];
     }
 
     public function category($category = null)
@@ -36,7 +33,7 @@ class QAController extends AbstractController
         $filteredQAs = $this->qaService->getQAsByCategory($category);
         $categories = $this->qaService->getCategories();
         
-        return $this->render('qa/category.twig', [
+        return [
             'qas' => $filteredQAs,
             'categories' => $categories,
             'currentCategory' => $category,
@@ -53,7 +50,7 @@ class QAController extends AbstractController
             $results = $this->qaService->searchQAs($query);
         }
         
-        return $this->render('qa/search.twig', [
+        return [
             'query' => $query,
             'results' => $results,
             'title' => 'Search Results - Q&A'

@@ -1,8 +1,8 @@
 <?php
 
-namespace CS362\Controller;
+namespace App\Controller;
 
-use CS362\Model\ComplianceReport;
+use App\Model\ComplianceReport;
 
 /**
  * Home Controller

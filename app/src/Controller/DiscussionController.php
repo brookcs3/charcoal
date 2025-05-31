@@ -2,18 +2,16 @@
 
 namespace App\Controller;
 
-use Charcoal\App\Controller\AbstractController;
-
-class DiscussionController extends AbstractController
+class DiscussionController
 {
     public function index()
     {
         $discussions = $this->getDiscussionData();
         
-        return $this->render('discussion/index.twig', [
+        return [
             'discussions' => $discussions,
             'title' => 'EdDiscussion - CS362 Analysis'
-        ]);
+        ];
     }
 
     public function topic($topicId = null)
@@ -36,7 +34,7 @@ class DiscussionController extends AbstractController
             return $this->redirect('/discussion');
         }
         
-        return $this->render('discussion/topic.twig', [
+        return [
             'topic' => $topic,
             'title' => $topic['title'] . ' - EdDiscussion'
         ]);

@@ -1,0 +1,43 @@
+{
+    "attachments": {
+        "attachables": {
+            "app/attachment/text": {
+                "label": "Text"
+            },
+            "app/attachment/image": {
+                "label": "Image"
+            },
+            "app/attachment/gallery": {
+                "label": "Image gallery"
+            },
+            "app/attachment/file": {
+                "label": "File"
+            },
+            "app/attachment/video": {
+                "label": "Video"
+            }
+        },
+        "groups": {
+            "contentBlocks": [
+                "app/attachment/text",
+                "app/attachment/image",
+                "app/attachment/gallery",
+                "app/attachment/video"
+            ]
+        },
+        "widgets": {
+            "contentBlocks": {
+                "group": "contentBlocks",
+                "attachment_heading": "{{ ident }}",
+                "attachable_objects": "contentBlocks",
+                "attachment_options": {
+                    "show_header": true,
+                    "show_preview": true,
+                    "show_heading": true
+                },
+                "show_attachment_heading": true,
+                "show_attachment_preview": true
+            }
+        }
+    }
+}

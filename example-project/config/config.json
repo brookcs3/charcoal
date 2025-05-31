@@ -1,0 +1,62 @@
+{
+    "project_name": "Acme",
+    "timezone": "America/Montreal",
+    "admin_config": "config/admin.php",
+    "logger": {
+        "level": "warning"
+    },
+    "email": {
+        "default_from": {
+            "email": null,
+            "name": null
+        }
+    },
+    "locales": {
+        "languages": {
+            "fr": {
+                "locale": "fr-FR"
+            },
+            "en": {
+                "locale": "en-US"
+            }
+        },
+        "default_language": "fr"
+    },
+    "metadata": {
+        "paths": [
+            "metadata/",
+            "vendor/charcoal/charcoal/packages/admin/metadata/",
+            "vendor/charcoal/charcoal/packages/app/metadata/",
+            "vendor/charcoal/charcoal/packages/attachment/metadata/",
+            "vendor/charcoal/charcoal/packages/cms/metadata/",
+            "vendor/charcoal/charcoal/packages/email/metadata/",
+            "vendor/charcoal/charcoal/packages/object/metadata/",
+            "vendor/charcoal/charcoal/packages/property/metadata/",
+            "vendor/charcoal/charcoal/packages/user/metadata/"
+        ]
+    },
+    "modules": {
+        "charcoal/admin/admin": {}
+    },
+    "service_providers": {
+        "app/service-provider/app": {}
+    },
+    "translator": {
+        "paths": [
+            "translations/app/",
+            "vendor/charcoal/charcoal/packages/admin/translations/",
+            "vendor/charcoal/charcoal/packages/app/translations/",
+            "vendor/charcoal/charcoal/packages/attachment/translations/"
+        ]
+    },
+    "view": {
+        "default_engine": "twig",
+        "use_cache": false,
+        "strict_variables": true,
+        "paths": [
+            "views/",
+            "vendor/charcoal/charcoal/packages/app/templates/",
+            "vendor/charcoal/charcoal/packages/cms/views/"
+        ]
+    }
+}

@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Model\ComplianceReport;
-use Charcoal\App\Controller\AbstractController;
-
-class ComplianceController extends AbstractController
+class ComplianceController
 {
     public function overview()
     {
@@ -18,10 +16,10 @@ class ComplianceController extends AbstractController
                       ->setWarnings(17)
                       ->setLastUpdated('2024-01-15');
 
-        return $this->render('compliance/overview.twig', [
+        return [
             'compliance' => $complianceData,
             'title' => 'Compliance Overview - CS362 Analysis'
-        ]);
+        ];
     }
 
     public function detailed()
@@ -62,11 +60,11 @@ class ComplianceController extends AbstractController
             ]
         ];
 
-        return $this->render('compliance/detailed.twig', [
+        return [
             'compliance' => $complianceData,
             'metrics' => $detailedMetrics,
             'title' => 'Detailed Compliance Analysis'
-        ]);
+        ];
     }
 
     public function report()
@@ -99,10 +97,10 @@ class ComplianceController extends AbstractController
             ]
         ];
 
-        return $this->render('compliance/report.twig', [
+        return [
             'compliance' => $complianceData,
             'sections' => $reportSections,
             'title' => 'Full Compliance Report'
-        ]);
+        ];
     }
 }

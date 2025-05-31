@@ -1,8 +1,8 @@
 <?php
 
-namespace CS362\Service;
+namespace App\Service;
 
-use CS362\Model\QAItem;
+use App\Model\QAItem;
 
 /**
  * Q&A Data Service

@@ -1,14 +1,12 @@
 <?php
 
-namespace CS362\Model;
-
-use Charcoal\Model\AbstractModel;
+namespace App\Model;
 
 /**
  * Compliance Report Model
  * Handles compliance analysis data and metrics
  */
-class ComplianceReport extends AbstractModel
+class ComplianceReport
 {
     /**
      * @var string

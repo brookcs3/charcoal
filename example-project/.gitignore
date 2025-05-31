@@ -1,0 +1,49 @@
+# Charcoal
+# -------
+
+.env
+/config/admin.*.*
+!/config/admin.sample.*
+/config/config.*.*
+!/config/config.sample.*
+/uploads/
+/www/uploads
+/var/
+
+# Locomotive Front-end Boilerplate
+# -------
+
+loconfig.*.json
+!loconfig.example.json
+
+# Package Managers
+# -------
+
+bower_components/
+composer.phar
+node_modules/
+/vendor/
+
+# Logging
+# -------
+
+*.log
+error_log
+logs/
+reports/
+
+# Testing
+# -------
+
+phpcs.xml
+phpstan.neon
+phpunit.xml
+psalm.xml
+
+# Caches
+# -------
+
+.phpunit.result.cache
+cache/
+test-reports/
+tmp/

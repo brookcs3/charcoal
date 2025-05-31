@@ -1,0 +1,13 @@
+{{# debug }}
+<pre>
+{{& htmlErrorDetails }}
+</pre>
+{{/ debug }}
+{{^ debug }}
+{{> app/template/partial/site-header }}
+
+<h1>{{# _t }}Page Not Found{{/ _t }}</h1>
+<p>{{# _t }}The page you are looking for could not be found.{{/ _t }}</p>
+
+{{> app/template/partial/site-footer }}
+{{/ debug }}

@@ -1,14 +1,12 @@
 <?php
 
-namespace CS362\Model;
-
-use Charcoal\Model\AbstractModel;
+namespace App\Model;
 
 /**
  * Q&A Item Model
  * Handles individual questions and answers from Ed Discussion
  */
-class QAItem extends AbstractModel
+class QAItem
 {
     /**
      * @var string

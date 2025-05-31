@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use Charcoal\App\Controller\AbstractController;
-
-class SummaryController extends AbstractController
+class SummaryController
 {
     public function index()
     {
@@ -76,7 +74,7 @@ class SummaryController extends AbstractController
             ]
         ];
 
-        return $this->render('summary/index.twig', [
+        return [
             'summary' => $summaryData,
             'title' => 'Project Summary - CS362 Analysis'
         ]);
@@ -134,7 +132,7 @@ class SummaryController extends AbstractController
             ]
         ];
 
-        return $this->render('summary/detailed.twig', [
+        return [
             'detailed' => $detailedSummary,
             'title' => 'Detailed Summary Analysis'
         ]);
