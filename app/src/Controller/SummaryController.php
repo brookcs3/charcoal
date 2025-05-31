@@ -77,7 +77,7 @@ class SummaryController
         return [
             'summary' => $summaryData,
             'title' => 'Project Summary - CS362 Analysis'
-        ]);
+        ];
     }
 
     public function detailed()
@@ -135,6 +135,6 @@ class SummaryController
         return [
             'detailed' => $detailedSummary,
             'title' => 'Detailed Summary Analysis'
-        ]);
+        ];
     }
 }
