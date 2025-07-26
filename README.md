@@ -1,109 +1,62 @@
-Charcoal Core
-=============
+# CS362 Charcoal Compliance Demo
 
-[![Build Status](https://travis-ci.org/locomotivemtl/charcoal-core.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-core)
+This repository contains an experimental PHP application exploring the [Charcoal](https://github.com/locomotivemtl/charcoal-core) architecture. It was created for the CS362 class to present compliance metrics, summaries, and a curated Q&A section. The project mixes a stripped down copy of **charcoal-core** with a custom app layer built around Twig templates.
 
-The `charcoal-core` module contains a few core charcoal namespaces: `\Charcoal\Loader`, `\Charcoal\Model`, `\Charcoal\Source` and `\Charcoal\Validator`.
+> **Status**: Proof‑of‑concept. A complete router and web front controller are not included, so the code is intended for reference rather than direct deployment.
 
-## How to Install
+## Project Goals
 
-The preferred (and only supported) way of installing _charcoal-core_ is with **composer**:
+* Demonstrate an MVC style using Charcoal models and loaders.
+* Provide example controllers and Twig views for a compliance dashboard.
+* Serve as a starting point for future coursework or experiments.
 
-```shell
-★ composer require locomotivemtl/charcoal-core
+## Repository Layout
+
+```
+app/                Application code
+  ├─ config/        Sample config with route map
+  ├─ src/           Controllers, models, and services
+  └─ views/         Twig templates
+src/Charcoal/       Trimmed copy of the charcoal-core library
+example-project/    Upstream boilerplate for reference only
 ```
 
-For a complete, ready-to-use _Charcoal_ project, start from the [`boilerplate`](https://github.com/locomotivemtl/charcoal-project-boilerplate):
+## Running Tests
 
-```shell
-★ composer create-project locomotivemtl/charcoal-project-boilerplate:@dev --prefer-source
+Unit tests require PHP 8 and PHPUnit:
+
+```bash
+composer install
+vendor/bin/phpunit
 ```
 
-## Dependencies and Requirements
+The container used for this cleanup pass cannot install dependencies, so tests may fail here. They should run in a full PHP environment.
 
-Charcoal depends on:
+## Highlight: Q&A Search Service
 
--   `PHP** 5.6+`
-    - `PHP 7` is recommended, for performance and security.
--   `ext-pdo`
--   `ext-mbstring`
--   `psr/log`
--   `psr/cache`
--   `locomotivemtl/charcoal-config`
--   `locomotivemtl/charcoal-factory`
--   `locomotivemtl/charcoal-property`
--   `locomotivemtl/charcoal-view`
+The `QADataService` class stores a small in-memory FAQ and exposes simple helper methods. The search feature scans questions and answers while returning model objects:
 
-# Loader
+```php
+public function searchQAItems(string $query): array
+{
+    $query = strtolower($query);
 
-# Model
+    $filtered = array_filter($this->qaData, function ($item) use ($query) {
+        return strpos(strtolower($item['question']), $query) !== false ||
+               strpos(strtolower($item['answer']), $query) !== false;
+    });
 
-# Source
-
-# Validator
-
-The validator namespace is obsolete and should not be used.
-Its usage is currently being removed from everywhere in charcoal.
-
-
-# Development
-
-To install the development environment:
-
-```shell
-★ composer install --prefer-source
+    return array_map(function ($data) {
+        return QAItem::fromArray($data);
+    }, $filtered);
+}
 ```
 
-To run the tests:
+This small example shows how Charcoal models can be combined with service classes for tidy, testable business logic.
 
-```shell
-★ composer test
-```
+## Next Steps
 
-## API documentation
+1. Implement a router and HTTP front controller (see `app/config/config.php` for intended routes).
+2. Add persistence for compliance metrics and Q&A data.
+3. Flesh out the example tests and integrate with a CI workflow.
 
--   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-core/docs/master/](https://locomotivemtl.github.io/charcoal-core/docs/master/)
--   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-core/master/](https://codedoc.pub/locomotivemtl/charcoal-core/master/index.html)
-
-## Development dependencies
-
--   `phpunit/phpunit`
--   `squizlabs/php_codesniffer`
--   `satooshi/php-coveralls`
-
-## Continuous Integration
-
-| Service | Badge | Description |
-| ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-base) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-core.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-core) | Runs code sniff check and unit tests. Auto-generates API documentation. |
-| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-core/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-core/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-core/?branch=master) | Code quality checker. Also validates API documentation quality. |
-| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-core) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-core/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-core?branch=master) | Unit Tests code coverage. |
-| [Sensiolabs](https://insight.sensiolabs.com/projects/ab15f6b0-2063-445e-81d7-2575b919b0ab) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ab15f6b0-2063-445e-81d7-2575b919b0ab/mini.png)](https://insight.sensiolabs.com/projects/ab15f6b0-2063-445e-81d7-2575b919b0ab) | Another code quality checker, focused on PHP. |
-
-## Coding Style
-
-The charcoal-core module follows the Charcoal coding-style:
-
--   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
--   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
--   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
--   [_phpDocumentor_](http://phpdoc.org/) comments.
--   Read the [phpcs.xml](phpcs.xml) file for all the details on code style.
-
-> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
-
-# Authors
-
--   Mathieu Ducharme <mat@locomotive.ca>
-
-# License
-
-Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
-
-# Changelog
-
--   Unreleased.
-
-## TODOs
-
--   Remove the dependency on charcoal-app
